@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "PauseMenuWidget.generated.h"
+#include "InventoryMenuWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_SG_API UPauseMenuWidget : public UUserWidget
+class PROJECT_SG_API UInventoryMenuWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
