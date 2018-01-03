@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/SphereComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "BaseInteractable.generated.h"
 
 UCLASS()
@@ -23,6 +25,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	
-	
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* InteractableMesh;
+
+	UPROPERTY(EditAnywhere)
+	USphereComponent* SphereCollision;
+
+	float SphereCollisionRadius = 150.f;
 };
