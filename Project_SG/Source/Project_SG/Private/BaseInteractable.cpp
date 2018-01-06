@@ -8,8 +8,7 @@
 ABaseInteractable::ABaseInteractable()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
+	PrimaryActorTick.bCanEverTick = false;
 
 	// Create a static mesh component as the root
 	InteractableMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("InteractableMesh"));
@@ -19,8 +18,10 @@ ABaseInteractable::ABaseInteractable()
 	SphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
 	SphereCollision->SetupAttachment(RootComponent);
 	SphereCollision->InitSphereRadius(SphereCollisionRadius);
-	SphereCollision->SetCollisionProfileName(TEXT("Pawn"));
 
+	// Setup Sphere Overlap Functions
+	SphereCollision->OnComponentBeginOverlap.AddDynamic(this, &ABaseInteractable::BeginOverlap);
+	SphereCollision->OnComponentEndOverlap.AddDynamic(this, &ABaseInteractable::EndOverlap);
 }
 
 // Called when the game starts or when spawned
@@ -30,10 +31,21 @@ void ABaseInteractable::BeginPlay()
 	
 }
 
-// Called every frame
-void ABaseInteractable::Tick(float DeltaTime)
+void ABaseInteractable::BeginOverlap(UPrimitiveComponent* OverlappedComponent,
+	AActor* OtherActor,
+	UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex,
+	bool bFromSweep,
+	const FHitResult &SweepResult) 
 {
-	Super::Tick(DeltaTime);
+	UE_LOG(LogTemp, Warning, TEXT("%s has overlapped with %s"), *(OverlappedComponent->GetName()), *(OtherActor->GetName()))
+}
 
+void ABaseInteractable::EndOverlap(UPrimitiveComponent* OverlappedComponent,
+	AActor* OtherActor,
+	UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex) 
+{
+	UE_LOG(LogTemp, Warning, TEXT("%s has stopped overlapping with %s"), *(OverlappedComponent->GetName()), *(OtherActor->GetName()))
 }
 
