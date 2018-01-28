@@ -4,8 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/SphereComponent.h"
-#include "Components/StaticMeshComponent.h"
 #include "BaseInteractable.generated.h"
 
 UCLASS()
@@ -24,10 +22,10 @@ protected:
 public:	
 
 	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* InteractableMesh;
+	class UStaticMeshComponent* InteractableMesh;
 
 	UPROPERTY(EditAnywhere)
-	USphereComponent* SphereCollision;
+	class USphereComponent* SphereCollision;
 	float SphereCollisionRadius = 150.f;
 
 	UFUNCTION()
@@ -43,4 +41,5 @@ public:
 			AActor* OtherActor,
 			UPrimitiveComponent* OtherComp,
 			int32 OtherBodyIndex);
+			
 };

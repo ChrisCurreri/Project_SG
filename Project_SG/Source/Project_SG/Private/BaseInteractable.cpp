@@ -1,6 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BaseInteractable.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/SphereComponent.h"
+#include "Project_SGCharacter.h"
+#include "Components/PrimitiveComponent.h"
 
 
 
@@ -31,21 +35,34 @@ void ABaseInteractable::BeginPlay()
 	
 }
 
+
 void ABaseInteractable::BeginOverlap(UPrimitiveComponent* OverlappedComponent,
-	AActor* OtherActor,
-	UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex,
-	bool bFromSweep,
-	const FHitResult &SweepResult) 
+	AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
+	bool bFromSweep, const FHitResult &SweepResult) 
 {
-	UE_LOG(LogTemp, Warning, TEXT("%s has overlapped with %s"), *(OverlappedComponent->GetName()), *(OtherActor->GetName()))
+	if (OtherActor->IsA(AProject_SGCharacter::StaticClass()))
+	{
+		// TODO when player overlaps with sphere
+		// object displays text
+		InteractableMesh->SetRenderCustomDepth(true); // object glows
+		
+		UE_LOG(LogTemp, Warning, TEXT("%s has overlapped with %s"), *(OverlappedComponent->GetName()), *(OtherActor->GetName()))
+	}
 }
 
 void ABaseInteractable::EndOverlap(UPrimitiveComponent* OverlappedComponent,
-	AActor* OtherActor,
-	UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex) 
+	AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) 
 {
-	UE_LOG(LogTemp, Warning, TEXT("%s has stopped overlapping with %s"), *(OverlappedComponent->GetName()), *(OtherActor->GetName()))
+	if (OtherActor->IsA(AProject_SGCharacter::StaticClass()))
+	{
+		// TODO when player stops overlaping with sphere
+		// object stops displaying text
+		InteractableMesh->SetRenderCustomDepth(false); // object stops glowing
+
+		UE_LOG(LogTemp, Warning, TEXT("%s has stopped overlapping with %s"), *(OverlappedComponent->GetName()), *(OtherActor->GetName()))
+	}
+	
+	
 }
+
 
