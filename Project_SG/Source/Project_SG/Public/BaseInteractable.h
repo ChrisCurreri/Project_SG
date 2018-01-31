@@ -28,6 +28,9 @@ public:
 	class USphereComponent* SphereCollision;
 	float SphereCollisionRadius = 150.f;
 
+	UPROPERTY(EditAnywhere)
+	class UWidgetComponent* WidgetComponent;
+
 	UFUNCTION()
 	void BeginOverlap(UPrimitiveComponent* OverlappedComponent,
 			AActor* OtherActor,

@@ -3,12 +3,13 @@
 #include "BaseInteractable.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Project_SGCharacter.h"
 #include "Components/PrimitiveComponent.h"
 
+//////////////////////////////////////////////////////////////////////////
+// ABaseInteractable
 
-
-// Sets default values
 ABaseInteractable::ABaseInteractable()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -26,43 +27,40 @@ ABaseInteractable::ABaseInteractable()
 	// Setup Sphere Overlap Functions
 	SphereCollision->OnComponentBeginOverlap.AddDynamic(this, &ABaseInteractable::BeginOverlap);
 	SphereCollision->OnComponentEndOverlap.AddDynamic(this, &ABaseInteractable::EndOverlap);
+
+	// Widget Component
+	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Item_Name"));
+	WidgetComponent->SetupAttachment(RootComponent);
+	
 }
 
 // Called when the game starts or when spawned
 void ABaseInteractable::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	WidgetComponent->SetVisibility(false);
 }
 
+//////////////////////////////////////////////////////////////////////////
+// Overlap functions
 
-void ABaseInteractable::BeginOverlap(UPrimitiveComponent* OverlappedComponent,
-	AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
-	bool bFromSweep, const FHitResult &SweepResult) 
+void ABaseInteractable::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, 
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult) 
 {
-	if (OtherActor->IsA(AProject_SGCharacter::StaticClass()))
-	{
-		// TODO when player overlaps with sphere
-		// object displays text
-		InteractableMesh->SetRenderCustomDepth(true); // object glows
+	if (!(OtherActor->IsA(AProject_SGCharacter::StaticClass()))) { return; }
+
+	WidgetComponent->SetVisibility(true); // object displays text
+	InteractableMesh->SetRenderCustomDepth(true); // object glows
+}
+
+void ABaseInteractable::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, 
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) 
+{
+	if (!OtherActor->IsA(AProject_SGCharacter::StaticClass())) { return; }
 		
-		UE_LOG(LogTemp, Warning, TEXT("%s has overlapped with %s"), *(OverlappedComponent->GetName()), *(OtherActor->GetName()))
-	}
-}
-
-void ABaseInteractable::EndOverlap(UPrimitiveComponent* OverlappedComponent,
-	AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) 
-{
-	if (OtherActor->IsA(AProject_SGCharacter::StaticClass()))
-	{
-		// TODO when player stops overlaping with sphere
-		// object stops displaying text
-		InteractableMesh->SetRenderCustomDepth(false); // object stops glowing
-
-		UE_LOG(LogTemp, Warning, TEXT("%s has stopped overlapping with %s"), *(OverlappedComponent->GetName()), *(OtherActor->GetName()))
-	}
-	
-	
+	WidgetComponent->SetVisibility(false); // object stops displaying text
+	InteractableMesh->SetRenderCustomDepth(false); // object stops glowing
 }
 
 
