@@ -6,6 +6,8 @@
 #include "Components/WidgetComponent.h"
 #include "Project_SGCharacter.h"
 #include "Components/PrimitiveComponent.h"
+#include "Classes/Kismet/KismetMathLibrary.h"
+#include "ConstructorHelpers.h"
 
 //////////////////////////////////////////////////////////////////////////
 // ABaseInteractable
@@ -31,6 +33,13 @@ ABaseInteractable::ABaseInteractable()
 	// Widget Component
 	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Item_Name"));
 	WidgetComponent->SetupAttachment(RootComponent);
+
+	// Wiget settings
+	WidgetComponent->SetRelativeLocation(FVector(0.f, -10.f, 40.f), false);
+	WidgetComponent->SetRelativeRotation(FRotator(0.f));
+	WidgetComponent->SetPivot(FVector2D(0.25f, 0.5f));
+	WidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+	SetupWigetClass();
 	
 }
 
@@ -48,7 +57,7 @@ void ABaseInteractable::BeginPlay()
 void ABaseInteractable::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, 
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult) 
 {
-	if (!(OtherActor->IsA(AProject_SGCharacter::StaticClass()))) { return; }
+	if (!OtherActor->IsA(AProject_SGCharacter::StaticClass())) { return; }
 
 	WidgetComponent->SetVisibility(true); // object displays text
 	InteractableMesh->SetRenderCustomDepth(true); // object glows
@@ -63,4 +72,13 @@ void ABaseInteractable::EndOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	InteractableMesh->SetRenderCustomDepth(false); // object stops glowing
 }
 
+//////////////////////////////////////////////////////////////////////////
+// ABaseInteractable functions
 
+void ABaseInteractable::SetupWigetClass()
+{
+	static ConstructorHelpers::FClassFinder<UUserWidget> BaseInteractable_UI(TEXT("/Game/UI/BaseInteractable_UI"));
+	if (!BaseInteractable_UI.Succeeded()) { return; }
+
+	WidgetComponent->SetWidgetClass(BaseInteractable_UI.Class);
+}

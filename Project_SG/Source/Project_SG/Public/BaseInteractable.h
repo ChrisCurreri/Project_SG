@@ -45,4 +45,6 @@ public:
 			UPrimitiveComponent* OtherComp,
 			int32 OtherBodyIndex);
 			
+private:
+	void SetupWigetClass();
 };
