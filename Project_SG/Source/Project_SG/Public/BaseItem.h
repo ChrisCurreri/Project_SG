@@ -14,7 +14,9 @@ class PROJECT_SG_API ABaseItem : public ABaseInteractable
 {
 	GENERATED_BODY()
 	
-	
-	
-	
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	//virtual void SetupWigetClass() override;
 };

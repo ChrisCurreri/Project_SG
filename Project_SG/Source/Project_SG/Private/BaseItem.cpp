@@ -3,5 +3,15 @@
 #include "BaseItem.h"
 
 
+void ABaseItem::BeginPlay()
+{
+	Super::BeginPlay();
+}
 
-
+/*
+void ABaseItem::SetupWigetClass()
+{
+	Super::SetupWigetClass();
+}
+*/
+	
